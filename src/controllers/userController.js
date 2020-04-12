@@ -19,8 +19,32 @@ module.exports = {
       })
       .catch(error => handleError(error, res))
 
-    // let token = createToken({id: 1})
-    // let verify = verifyToken(token)
     return res.status(200).json({id: userID[0]})
+  },
+
+  async find (req, res) {
+    const id = req.params.id
+
+    const user = await connection(TABLENAME)
+      .where({ id })
+      .select('*')
+      .first()
+      .catch(error => handleError(error, res))
+
+    if (!user) {
+      return res.status(406).json({
+        error: `item com id ${id} não encontrado`
+      })
+    }
+
+    return res.status(200).json(user)
+  },
+
+  async index (req, res) {
+
+    const users = await connection(TABLENAME)
+      .select('*')
+    
+    res.status(200).json(users)
   }
 }
