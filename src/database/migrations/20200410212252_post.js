@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  return knex.schema.createTable ('post', function (table) {
+  return knex.schema.createTable ('posts', function (table) {
     table.increments()
 
     table.string('title').notNullable()
@@ -10,10 +10,10 @@ exports.up = function(knex) {
 
     table.integer('userIDFK').unsigned()
 
-    table.foreign('userIDFK').references('id').inTable('user')
+    table.foreign('userIDFK').references('id').inTable('users')
   })
 }
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('post')
+  return knex.schema.dropTable('posts')
 }

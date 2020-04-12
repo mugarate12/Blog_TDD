@@ -5,6 +5,6 @@ const UserController = require('./controllers/userController')
 const routes = Router()
 
 // declaro minhas rotas
-routes.get('/users', UserController.create)
+routes.post('/users', UserController.create)
 
 module.exports = routes

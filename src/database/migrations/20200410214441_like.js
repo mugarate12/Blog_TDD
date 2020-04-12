@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  return knex.schema.createTable ('like', function (table) {
+  return knex.schema.createTable ('likes', function (table) {
     table.increments()
 
     table.timestamp('created_at', { useTz: true })
@@ -8,11 +8,11 @@ exports.up = function(knex) {
     table.integer('userIDFK').unsigned()
     table.integer('postIDFK').unsigned()
     
-    table.foreign('userIDFK').references('id').inTable('user')
-    table.foreign('postIDFK').references('id').inTable('post')
+    table.foreign('userIDFK').references('id').inTable('users')
+    table.foreign('postIDFK').references('id').inTable('posts')
   })  
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('like')
+  return knex.schema.dropTable('likes')
 };

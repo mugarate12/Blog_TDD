@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "dev": "SET JWT_SECRET=secret&&nodemon",
+    "dev": "SET NODE_ENV=development&&SET JWT_SECRET=secret&&nodemon --ignore tests",
     "test": "SET NODE_ENV=test&&SET JWT_SECRET=secret&&jest"
   },
   "keywords": [],
