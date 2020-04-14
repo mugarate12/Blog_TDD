@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "SET NODE_ENV=development&&SET JWT_SECRET=secret&&nodemon --ignore tests",
-    "test": "SET NODE_ENV=test&&SET JWT_SECRET=secret&&jest"
+    "pretest": "SET NODE_ENV=test&&knex migrate:latest",
+    "test": "SET NODE_ENV=test&&SET JWT_SECRET=secret&&jest",
+    "posttest": "SET NODE_ENV=test&&knex migrate:rollback --all"
   },
   "keywords": [],
   "author": "",
