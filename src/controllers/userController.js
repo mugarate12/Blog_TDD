@@ -41,7 +41,6 @@ module.exports = {
   },
 
   async index (req, res) {
-
     const users = await connection(TABLENAME)
       .select('*')
     

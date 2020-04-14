@@ -1,7 +1,10 @@
 const connection = require('./../database/connection')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 const { handleError } = require('./../utils/utils')
 const { createToken } = require('./../utils/token')
+const JWT_SECRET = process.env.JWT_SECRET
 
 const TABLENAME = 'users'
 
@@ -33,9 +36,9 @@ module.exports = {
     }
 
     // crio o token
-    const token = createToken({id: user.id})
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, {})
 
-    return res.status(200).json({token})
+    return res.status(200).json({token, user})
 
     // const token = createToken({})
   }
