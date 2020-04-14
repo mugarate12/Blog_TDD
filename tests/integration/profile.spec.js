@@ -1,6 +1,7 @@
 const request = require('supertest')
 const app = require('./../../src/app')
-const { verifyToken } = require('./../../src/utils/token')
+const jwt = require('jsonwebtoken')
+const JWT_SECRET = process.env.JWT_SECRET
 
 describe('Tests for a user credencials', () => {
 
@@ -30,8 +31,10 @@ describe('Tests for a user credencials', () => {
     done()
   })
 
-  it('should a valid user be login', async () => {
-    const decodedToken = verifyToken(LoggedTokenUser.body.token)
+  it('should a valid token when a user logs in', async () => {
+    const decodedToken = jwt.verify(LoggedTokenUser.body.token, JWT_SECRET, (error, decoded) => {
+      return decoded
+    })
     
     expect(decodedToken.id).toBeGreaterThan(0)
   })

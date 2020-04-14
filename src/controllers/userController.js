@@ -1,5 +1,4 @@
 const connection = require('./../database/connection')
-// const { createToken, verifyToken } = require('./../utils/token')
 const { createPasswordHash } = require('./../utils/hashPassword')
 const { handleError } = require('./../utils/utils')
 

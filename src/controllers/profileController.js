@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const { handleError } = require('./../utils/utils')
-const { createToken } = require('./../utils/token')
 const JWT_SECRET = process.env.JWT_SECRET
 
 const TABLENAME = 'users'
