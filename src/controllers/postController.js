@@ -26,11 +26,22 @@ module.exports = {
   },
 
   async index (req, res) {
+    const userID = req.userID
+
+    const posts = await connection(TABLENAME)
+      .where({ userIDFK: userID})
+      .select('*')
     
+    if (!posts) {
+      res.status(406).json({
+        error: 'não foi possivel encontrar posts deste usuario'
+      })
+    }
+
+    return res.status(200).json({ posts })
   },
 
   async delete (req, res) {
-    const userID = req.userID
     const id = req.params.id
 
     const removedPost = await connection(TABLENAME)
