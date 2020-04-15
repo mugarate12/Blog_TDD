@@ -7,6 +7,8 @@ exports.up = function (knex) {
     table.string('name').notNullable()
     table.string('password').notNullable()
     table.string('description').notNullable()
+
+    table.unique('username')
   })
 }
 
