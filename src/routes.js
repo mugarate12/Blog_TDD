@@ -11,6 +11,7 @@ routes.get('/', (req, res) => {  })
 // declaro minhas rotas
 routes.post('/users', UserController.create)
 routes.get('/users', auth, UserController.index)
+routes.put('/users', auth, UserController.updatePassoword)
 
 routes.post('/profile', ProfileController.login)
 
