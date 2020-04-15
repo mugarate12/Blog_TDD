@@ -2,6 +2,7 @@ const { Router } = require('express')
 
 const UserController = require('./controllers/userController')
 const ProfileController = require('./controllers/profileController')
+const PostController = require('./controllers/postController')
 const auth = require('./middlewares/auth')
 
 const routes = Router()
@@ -16,5 +17,7 @@ routes.delete('/users', auth, UserController.remove)
 
 routes.post('/profile', ProfileController.login)
 routes.put('/profile', auth, UserController.updateDescription)
+
+routes.post('/posts', auth, PostController.create)
 
 module.exports = routes

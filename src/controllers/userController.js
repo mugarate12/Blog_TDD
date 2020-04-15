@@ -18,6 +18,12 @@ module.exports = {
       })
       .catch(error => handleError(error, res))
 
+    if (!userID) {
+      return res.status(406).json({
+        error: 'impossivel criar esse usuario, verifique se o username está disponivel'
+      })
+    }
+
     return res.status(200).json({id: userID[0]})
   },
 
