@@ -23,5 +23,26 @@ module.exports = {
     }
 
     return res.status(200).json({id: createdPost[0]})
+  },
+
+  async index (req, res) {
+    
+  },
+
+  async delete (req, res) {
+    const userID = req.userID
+    const id = req.params.id
+
+    const removedPost = await connection(TABLENAME)
+      .where({ id })
+      .del()
+
+    if (!removedPost) {
+      res.status(406).json({
+        error: 'não foi possivel remover esse post, verificar informações'
+      })
+    }
+
+    return res.status(200).json(removedPost)
   }
 }

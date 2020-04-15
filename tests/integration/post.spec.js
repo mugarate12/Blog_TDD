@@ -39,4 +39,12 @@ describe('Tests for a post CRUD', () => {
     expect(createPost.body.id).toBeGreaterThan(0)
     expect(createPost.status).toBe(200)
   })
+
+  it('should remove a post', async () => {
+    const removedPost = await request(app)
+      .delete(`/posts/${createPost.body.id}`)
+      .set('Authorization', `bearer ${token}`)
+      
+    expect(removedPost.status).toBe(200)
+  })
 })

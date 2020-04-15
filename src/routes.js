@@ -19,5 +19,7 @@ routes.post('/profile', ProfileController.login)
 routes.put('/profile', auth, UserController.updateDescription)
 
 routes.post('/posts', auth, PostController.create)
+routes.get('/posts', auth, PostController.index)
+routes.delete('/posts/:id', auth, PostController.delete)
 
 module.exports = routes
