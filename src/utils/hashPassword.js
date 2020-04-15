@@ -7,6 +7,17 @@ async function createPasswordHash(password) {
   return newPassword
 }
 
+async function comparePassword(password, hashPassword) {
+  const isValidPassword = await bcrypt.compare(password, hashPassword)
+  if (!isValidPassword) {
+    return res.status(406).json({
+      error: 'informações incorretas, por favor, vereficar se todas as credenciais foram enviadas corretamente'
+    })
+  }
+  return
+}
+
 module.exports = {
-  createPasswordHash
+  createPasswordHash,
+  comparePassword
 }

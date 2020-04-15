@@ -1,6 +1,5 @@
 const connection = require('./../database/connection')
-const bcrypt = require('bcryptjs')
-const { createPasswordHash } = require('./../utils/hashPassword')
+const { createPasswordHash, comparePassword } = require('./../utils/hashPassword')
 const { handleError } = require('./../utils/utils')
 
 const TABLENAME = 'users'
@@ -63,12 +62,7 @@ module.exports = {
       })
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password)
-    if (!isValidPassword) {
-      return res.status(406).json({
-        error: 'informações incorretas, por favor, vereficar se todas as credenciais foram enviadas corretamente'
-      })
-    }
+    await comparePassword(password, user.password)
 
     newPassword = await createPasswordHash(newPassword)
     const userUpdated = await connection(TABLENAME)

@@ -38,18 +38,4 @@ describe('Tests for a user credencials', () => {
     
     expect(decodedToken.id).toBeGreaterThan(0)
   })
-
-  it('should a valid user be a update password', async () => {
-    const token = LoggedTokenUser.body.token
-
-    const updatedUser = await request(app)
-      .put('/users')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        password: "passwordExample123",
-        newPassword: "passwordExampleUpdated"
-      })
-
-    expect(updatedUser.status).toBe(200)
-  })
 })

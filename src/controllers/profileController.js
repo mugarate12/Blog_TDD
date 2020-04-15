@@ -1,8 +1,8 @@
 const connection = require('./../database/connection')
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const { handleError } = require('./../utils/utils')
+const { comparePassword } = require('./../utils/hashPassword')
 const JWT_SECRET = process.env.JWT_SECRET
 
 const TABLENAME = 'users'
@@ -27,12 +27,7 @@ module.exports = {
     }
 
     // verifico se o password informado é compativel com o password criptografado no banco
-    const isValidPassword = await bcrypt.compare(password, user.password)
-    if (!isValidPassword) {
-      return res.status(406).json({
-        error: 'informações incorretas, por favor, vereficar se todas as credenciais foram enviadas corretamente'
-      })
-    }
+    await comparePassword(password, user.password)
 
     // crio o token
     const token = jwt.sign({ id: user.id }, JWT_SECRET, {})
