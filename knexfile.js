@@ -3,11 +3,26 @@
 module.exports = {
 
   development: {
-    client: 'mysql',
+    client: 'mysql2',
     connection: {
       database: 'blog_knex',
       user:     'root',
       password: 'majuge123'
+    },
+    migrations: {
+      directory: './src/database/migrations'
+    }
+  },
+
+  test: {
+    client: 'mysql2',
+    connection: {
+      database: 'blog_knex_tests',
+      user:     'root',
+      password: 'majuge123'
+    },
+    migrations: {
+      directory: './src/database/migrations'
     }
   },
 
