@@ -12,7 +12,9 @@ routes.get('/', (req, res) => {  })
 routes.post('/users', UserController.create)
 routes.get('/users', auth, UserController.index)
 routes.put('/users', auth, UserController.updatePassoword)
+routes.delete('/users', auth, UserController.remove)
 
 routes.post('/profile', ProfileController.login)
+routes.put('/profile', auth, UserController.updateDescription)
 
 module.exports = routes

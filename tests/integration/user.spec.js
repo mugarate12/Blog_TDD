@@ -5,6 +5,7 @@ describe('Tests for users routes', () => {
 
   let userCreated
   let loggedTokenUser
+  let token
 
   beforeAll(async (done) => {
     userCreated = await request(app)
@@ -23,6 +24,8 @@ describe('Tests for users routes', () => {
         password: "majuge"
       })
 
+    token = loggedTokenUser.body.token
+
     expect(userCreated.status).toBe(200)
     expect(loggedTokenUser.status).toBe(200)
     done()
@@ -34,8 +37,6 @@ describe('Tests for users routes', () => {
   })
 
   it('should a valid user be a update password', async () => {
-    const token = loggedTokenUser.body.token
-
     const updatedUser = await request(app)
       .put('/users')
       .set('Authorization', `bearer ${token}`)
@@ -45,5 +46,24 @@ describe('Tests for users routes', () => {
       })
 
     expect(updatedUser.status).toBe(200)
-  })  
+  })
+
+  it('should a valid user be a update description', async () => {
+    const updatedUser = await request(app)
+      .put('/profile')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        description: "Olá, eu sou uma descrição"
+      })
+
+    expect(updatedUser.status).toBe(200)
+  })
+
+  it('should a valid user request remove yourself', async () => {
+    const removedUser = await request(app)
+      .delete('/users')
+      .set('Authorization', `bearer ${token}`)
+
+    expect(removedUser.status).toBe(200)
+  })
 })
