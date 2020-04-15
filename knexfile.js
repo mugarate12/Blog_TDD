@@ -14,6 +14,18 @@ module.exports = {
     }
   },
 
+  test: {
+    client: 'mysql2',
+    connection: {
+      database: 'blog_knex_tests',
+      user:     'root',
+      password: 'majuge123'
+    },
+    migrations: {
+      directory: './src/database/migrations'
+    }
+  },
+
   staging: {
     client: 'postgresql',
     connection: {

@@ -4,16 +4,20 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon",
-    "test": "SET NODE_ENV=test&&jest"
+    "dev": "SET NODE_ENV=development&&SET JWT_SECRET=secret&&nodemon --ignore tests",
+    "pretest": "SET NODE_ENV=test&&knex migrate:rollback --all&&knex migrate:latest",
+    "test": "SET NODE_ENV=test&&SET JWT_SECRET=secret&&jest",
+    "posttest": "SET NODE_ENV=test&&knex migrate:rollback --all"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "celebrate": "^12.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.13",
     "mysql2": "^2.1.0"
   },
