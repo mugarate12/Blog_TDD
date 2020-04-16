@@ -3,6 +3,7 @@ const { Router } = require('express')
 const UserController = require('./controllers/userController')
 const ProfileController = require('./controllers/profileController')
 const PostController = require('./controllers/postController')
+const CommentController = require('./controllers/commentController')
 const auth = require('./middlewares/auth')
 
 const routes = Router()
@@ -20,6 +21,9 @@ routes.put('/profile', auth, UserController.updateDescription)
 
 routes.post('/posts', auth, PostController.create)
 routes.get('/posts', auth, PostController.index)
+routes.get('/posts/:id', auth, PostController.indexUser)
 routes.delete('/posts/:id', auth, PostController.delete)
+
+routes.post('/comments', auth, CommentController.create)
 
 module.exports = routes

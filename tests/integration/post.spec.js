@@ -46,7 +46,24 @@ describe('Tests for a post CRUD', () => {
       .set('Authorization', `bearer ${token}`)
 
     expect(postByUser.status).toBe(200)
-  });
+  })
+
+  it('should get post by user different with a logged user', async () => {
+    const newUser = await request(app)
+      .post('/users')
+      .send({
+        username: "post_test_user2",
+        password: "post_test_password",
+        name: "Mateus",
+        description: "Eu sou o Capuz Vermelho"
+      })
+
+    const posts = await request(app)
+      .get(`/posts/${newUser.body.id}`)
+      .set('Authorization', `bearer ${token}`)
+
+    expect(posts.status).toBe(200)
+  })
 
   it('should remove a post', async () => {
     const removedPost = await request(app)

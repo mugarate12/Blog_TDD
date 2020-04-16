@@ -41,6 +41,22 @@ module.exports = {
     return res.status(200).json({ posts })
   },
 
+  async indexUser (req, res) {
+    const id = req.params
+
+    const posts = await connection(TABLENAME)
+      .where({ id })
+      .select('*')
+
+    if (!posts) {
+      res.status(406).json({
+        error: 'não foi possivel encontrar posts deste usuario'
+      })
+    }
+
+    return res.status(200).json({ posts })
+  },
+
   async delete (req, res) {
     const id = req.params.id
 
