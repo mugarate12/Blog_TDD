@@ -64,6 +64,6 @@ module.exports = {
       })
     }
 
-    return res.status(200).json(unlike)
+    return res.status(200).json({liked: false})
   }
 }

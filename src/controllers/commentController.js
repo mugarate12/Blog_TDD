@@ -43,7 +43,7 @@ module.exports = {
       })
     }
 
-    return res.status(200).json(comment)
+    return res.status(200).json({ data: comment })
   }, 
 
   async update (req, res) {
@@ -67,7 +67,7 @@ module.exports = {
       })
     }
 
-    return res.status(200).json({id: commentUpdated})
+    return res.status(200).json({ id: commentUpdated })
   },
 
   async remove (req, res) {
@@ -88,6 +88,6 @@ module.exports = {
       })
     }
 
-    return res.status(200).json(removedComment)
+    return res.status(200).json({ id: removedComment })
   }
 }

@@ -27,12 +27,12 @@ module.exports = {
     return res.status(200).json({id: userID[0]})
   },
 
-  async index (req, res) {
-    const users = await connection(TABLENAME)
-      .select('*')
+  // async index (req, res) {
+  //   const users = await connection(TABLENAME)
+  //     .select('*')
     
-    res.status(200).json(users)
-  },
+  //   res.status(200).json({ data: users })
+  // },
 
   async updatePassoword (req, res) {
     const id = req.userID

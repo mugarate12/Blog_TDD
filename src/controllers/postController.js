@@ -38,7 +38,7 @@ module.exports = {
       })
     }
 
-    return res.status(200).json({ posts })
+    return res.status(200).json({ data: posts })
   },
 
   async indexUser (req, res) {
@@ -54,7 +54,7 @@ module.exports = {
       })
     }
 
-    return res.status(200).json({ posts })
+    return res.status(200).json({ data: posts })
   },
 
   async delete (req, res) {
@@ -70,6 +70,6 @@ module.exports = {
       })
     }
 
-    return res.status(200).json(removedPost)
+    return res.status(200).json({ id: removedPost })
   }
 }
