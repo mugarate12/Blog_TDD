@@ -33,7 +33,7 @@ module.exports = {
       .select('*')
     
     if (!posts) {
-      res.status(406).json({
+      return res.status(406).json({
         error: 'não foi possivel encontrar posts deste usuario'
       })
     }
@@ -49,7 +49,7 @@ module.exports = {
       .select('*')
 
     if (!posts) {
-      res.status(406).json({
+      return res.status(406).json({
         error: 'não foi possivel encontrar posts deste usuario'
       })
     }
@@ -65,7 +65,7 @@ module.exports = {
       .del()
 
     if (!removedPost) {
-      res.status(406).json({
+      return res.status(406).json({
         error: 'não foi possivel remover esse post, verificar informações'
       })
     }

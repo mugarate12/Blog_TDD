@@ -58,6 +58,7 @@ module.exports = {
       .update({
         password: newPassword
       })
+      .catch((error) => handleError(error, res))
 
     if (!userUpdated) {
       return res.status(406).json({
@@ -77,6 +78,7 @@ module.exports = {
       .update({
         description
       })
+      .catch((error) => handleError(error, res))
     
     if (!userUpdated) {
       return res.status(406).json({
@@ -93,9 +95,10 @@ module.exports = {
     const removedUser = await connection(TABLENAME)
       .where({ id })
       .del()
+      .catch((error) => handleError(error, res))
 
     if (!removedUser) {
-      res.status(406).json({
+      return res.status(406).json({
         error: 'não foi possivel remover esse usuario, verificar informações'
       })
     }
