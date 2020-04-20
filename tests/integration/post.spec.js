@@ -1,0 +1,75 @@
+const request = require('supertest')
+const app = require('./../../src/app')
+
+describe('Tests for a post CRUD', () => {
+  let token
+  let createPost
+
+  beforeAll(async (done) => {
+    const userCreated = await request(app)
+      .post('/users')
+      .send({
+        username: "post_test_user",
+        password: "post_test_password",
+        name: "Mateus",
+        description: "Eu sou o Capuz Vermelho"
+      })
+
+    const loggedTokenUser = await request(app)
+      .post('/profile')
+      .send({
+        username: "post_test_user",
+        password: "post_test_password"
+      })
+
+    token = loggedTokenUser.body.token
+
+    createPost = await request(app)
+      .post('/posts')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        title: "Sou um título",
+        content: "Sou um conteúdo, falo sobre a vida, filosofia, e fora aquele que cê sabe quem"
+      })
+
+    done()
+  })
+
+  it('should a create a post', async () => {
+    expect(createPost.body.id).toBeGreaterThan(0)
+    expect(createPost.status).toBe(200)
+  })
+
+  it('should get posts by user', async () => {
+    const postByUser = await request(app)
+      .get('/posts')
+      .set('Authorization', `bearer ${token}`)
+
+    expect(postByUser.status).toBe(200)
+  })
+
+  it('should get post by user different with a logged user', async () => {
+    const newUser = await request(app)
+      .post('/users')
+      .send({
+        username: "post_test_user2",
+        password: "post_test_password",
+        name: "Mateus",
+        description: "Eu sou o Capuz Vermelho"
+      })
+
+    const posts = await request(app)
+      .get(`/posts/${newUser.body.id}`)
+      .set('Authorization', `bearer ${token}`)
+
+    expect(posts.status).toBe(200)
+  })
+
+  it('should remove a post', async () => {
+    const removedPost = await request(app)
+      .delete(`/posts/${createPost.body.id}`)
+      .set('Authorization', `bearer ${token}`)
+      
+    expect(removedPost.status).toBe(200)
+  })
+})

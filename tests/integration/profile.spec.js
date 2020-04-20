@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET
 
 describe('Tests for a user credencials', () => {
-
   let createuser
   let LoggedTokenUser
 

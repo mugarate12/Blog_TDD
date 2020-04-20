@@ -2,7 +2,6 @@ const request = require('supertest')
 const app = require('./../../src/app')
 
 describe('Tests for users routes', () => {
-
   let userCreated
   let loggedTokenUser
   let token

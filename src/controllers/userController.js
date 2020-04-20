@@ -18,15 +18,21 @@ module.exports = {
       })
       .catch(error => handleError(error, res))
 
+    if (!userID) {
+      return res.status(406).json({
+        error: 'impossivel criar esse usuario, verifique se o username está disponivel'
+      })
+    }
+
     return res.status(200).json({id: userID[0]})
   },
 
-  async index (req, res) {
-    const users = await connection(TABLENAME)
-      .select('*')
+  // async index (req, res) {
+  //   const users = await connection(TABLENAME)
+  //     .select('*')
     
-    res.status(200).json(users)
-  },
+  //   res.status(200).json({ data: users })
+  // },
 
   async updatePassoword (req, res) {
     const id = req.userID
@@ -52,6 +58,7 @@ module.exports = {
       .update({
         password: newPassword
       })
+      .catch((error) => handleError(error, res))
 
     if (!userUpdated) {
       return res.status(406).json({
@@ -71,6 +78,7 @@ module.exports = {
       .update({
         description
       })
+      .catch((error) => handleError(error, res))
     
     if (!userUpdated) {
       return res.status(406).json({
@@ -87,9 +95,10 @@ module.exports = {
     const removedUser = await connection(TABLENAME)
       .where({ id })
       .del()
+      .catch((error) => handleError(error, res))
 
     if (!removedUser) {
-      res.status(406).json({
+      return res.status(406).json({
         error: 'não foi possivel remover esse usuario, verificar informações'
       })
     }
