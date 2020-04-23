@@ -46,8 +46,28 @@ describe('tests for a comments CRUD', () => {
     done()
   })
 
-  it('should a create a comment', async () => {
-    expect(createdComment.status).toBe(200)
+  it('should create a comment', async () => {
+    expect(createdComment.status).toBe(201)
+  })
+
+  it('should not sucess to create comment', async () => {
+    const allFieldsRequired = await request(app)
+      .post('/comments')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        content: "sou um conteudo de um comentario"
+      })
+    
+    const invalidPost = await request(app)
+      .post('/comments')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        content: "sou um conteudo de um comentario",
+        postID: 60
+      })
+
+      expect(allFieldsRequired.status).toBe(400)
+      expect(invalidPost.status).toBe(409)
   })
 
   it('should get one comment by user', async () => {
@@ -56,6 +76,17 @@ describe('tests for a comments CRUD', () => {
       .set('Authorization', `bearer ${token}`)
 
     expect(commentSelected.status).toBe(200)
+  })
+
+  it('should get comments by post', async () => {
+    const comments = await request(app)
+      .get('/posts/comments')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        postID: createdPostID
+      })
+
+    expect(comments.status).toBe(200)
   })
 
   it('should a update a comment', async () => {
@@ -69,11 +100,36 @@ describe('tests for a comments CRUD', () => {
     expect(updatedComment.status).toBe(200)
   })
 
+  it('should invalid request for a update comment', async () => {
+    const allFieldsRequired = await request(app)
+      .put(`/comments/${createdComment.body.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .send({})
+
+    const InvalidCommentID = await request(app)
+      .put('/comments/20000')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        content: "sou um novo conteudo de um comentario"
+      })
+    
+    expect(allFieldsRequired.status).toBe(400)
+    expect(InvalidCommentID.status).toBe(406)
+  })
+
   it('should a remove a comment', async () => {
     const removedComment = await request(app)
       .delete(`/comments/${createdComment.body.id}`)
       .set('Authorization', `bearer ${token}`)
     
     expect(removedComment.status).toBe(200)
+  })
+
+  it('should invalid request for a remove comment', async () => {
+    const InvalidCommentID = await request(app)
+      .delete('/comments/2000000')
+      .set('Authorization', `bearer ${token}`)
+
+    expect(InvalidCommentID.status).toBe(406)
   })
 })

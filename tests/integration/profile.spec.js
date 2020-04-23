@@ -25,16 +25,27 @@ describe('Tests for a user credencials', () => {
       })
 
 
-    expect(createuser.status).toBe(200)
+    expect(createuser.status).toBe(201)
     expect(LoggedTokenUser.status).toBe(200)
     done()
   })
 
-  it('should a valid token when a user logs in', async () => {
+  it('should create valid token when a user logs in', async () => {
     const decodedToken = jwt.verify(LoggedTokenUser.body.token, JWT_SECRET, (error, decoded) => {
       return decoded
     })
     
     expect(decodedToken.id).toBeGreaterThan(0)
+  })
+
+  it('should not create valid token', async () => {
+    const InvalidUser = await request(app)
+      .post('/profile')
+      .send({
+        username: "TEST",
+        password: "123456"
+      })
+
+    expect(InvalidUser.status).toBe(406)
   })
 })

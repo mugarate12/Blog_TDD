@@ -17,7 +17,7 @@ module.exports = {
       })
       .select('*')
       .first()
-      .catch(error => handleError(error))
+      .catch(error => handleError(error, res, "usuario não encontrado, por favor, verificar informações"))
     
     // verifico se a busca foi feita com sucesso
     if (!user) {
@@ -33,7 +33,5 @@ module.exports = {
     const token = jwt.sign({ id: user.id }, JWT_SECRET, {})
 
     return res.status(200).json({token, user})
-
-    // const token = createToken({})
   }
 }

@@ -37,7 +37,7 @@ describe('tests for a likes CRUD', () => {
     done()
   })
 
-  it('should a like a post', async () => {
+  it('should like a post', async () => {
     const likePost = await request(app)
       .post('/likes')
       .set('Authorization', `bearer ${token}`)
@@ -45,7 +45,16 @@ describe('tests for a likes CRUD', () => {
         postID: createdPostID
       })
 
-    expect(likePost.status).toBe(200)
+    expect(likePost.status).toBe(201)
+  })
+
+  it('should bad request for a like post', async () => {
+    const allFieldsRequired = await request(app)
+    .post('/likes')
+    .set('Authorization', `bearer ${token}`)
+    .send({})
+
+    expect(allFieldsRequired.status).toBe(400)
   })
 
   it('should a likes by one post', async () => {

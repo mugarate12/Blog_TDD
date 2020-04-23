@@ -1,5 +1,6 @@
 const connection = require('./../database/connection')
-const { createPasswordHash, comparePassword } = require('./../utils/hashPassword')
+const bcrypt = require('bcryptjs')
+const { createPasswordHash } = require('./../utils/hashPassword')
 const { handleError } = require('./../utils/utils')
 
 const TABLENAME = 'users'
@@ -9,84 +10,64 @@ module.exports = {
     let { username, password, name, description = '' } = req.body
     password = await createPasswordHash(password)
 
-    const userID = await connection(TABLENAME)
+    await connection(TABLENAME)
       .insert({
         username,
         password,
         name,
         description
       })
-      .catch(error => handleError(error, res))
-
-    if (!userID) {
-      return res.status(406).json({
-        error: 'impossivel criar esse usuario, verifique se o username está disponivel'
-      })
-    }
-
-    return res.status(200).json({id: userID[0]})
+      .then(userID => res.status(201).json({ id: userID[0] }))
+      .catch(error => handleError(error, res, "username invalido, por favor, utilizar outro"))
   },
-
-  // async index (req, res) {
-  //   const users = await connection(TABLENAME)
-  //     .select('*')
-    
-  //   res.status(200).json({ data: users })
-  // },
 
   async updatePassoword (req, res) {
     const id = req.userID
     let { password, newPassword } = req.body
 
-    const user = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({ id })
       .select('*')
       .first()
-      .catch(error => handleError(error, res))
+      .then(async user => {
+        const inValidPassword = await bcrypt.compare(password, user.password)
+        if (!inValidPassword) {
+          return res.status(406).json({
+            error: 'informações incorretas, por favor, vereficar se todas as credenciais foram enviadas corretamente'
+          })
+        }
 
-    if (!user) {
-      return res.status(406).json({
-        error: `item com id ${id} não encontrado`
-      })
-    }
-
-    await comparePassword(password, user.password)
-
-    newPassword = await createPasswordHash(newPassword)
-    const userUpdated = await connection(TABLENAME)
-      .where({ id })
-      .update({
-        password: newPassword
-      })
-      .catch((error) => handleError(error, res))
-
-    if (!userUpdated) {
-      return res.status(406).json({
-        error: 'não foi possivel alterar a senha deste usuario, por favor, verifique os dados informados'
-      })
-    }
-
-    return res.status(200).json({ userUpdated })
+        newPassword = await createPasswordHash(newPassword)
+        await connection(TABLENAME)
+          .where({ id })
+          .update({
+            password: newPassword
+          })
+          .then(userUpdated => res.status(200).json({ userUpdated }))
+          .catch((error) => handleError(error, res, "não foi possivel alterar a senha deste usuario, por favor, verifique os dados informados"))
+        })
+      .catch(error => handleError(error, res, `usuario com id ${id} não encontrado`))
   },
 
   async updateDescription (req, res) {
     const id = req.userID
     let { description } = req.body
 
-    const userUpdated = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({ id })
       .update({
         description
       })
-      .catch((error) => handleError(error, res))
+      .then(userUpdated => res.status(200).json({ userUpdated }))
+      .catch((error) => handleError(error, res, "olá"))
     
-    if (!userUpdated) {
-      return res.status(406).json({
-        error: 'não foi possivel alterar a descrição deste usuario, por favor, verifique os dados informados'
-      })
-    }
+    // if (!userUpdated) {
+    //   return res.status(406).json({
+    //     error: 'não foi possivel alterar a descrição deste usuario, por favor, verifique os dados informados'
+    //   })
+    // }
 
-    return res.status(200).json({ userUpdated })
+    // return 
   },
 
   async remove (req, res) {

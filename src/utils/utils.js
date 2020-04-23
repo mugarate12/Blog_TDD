@@ -6,10 +6,10 @@ function throwError (condition, res, message) {
   }
 }
 
-function handleError (error, res) {
-  return res.status(502).json({
+function handleError (error, res, message) {
+  return res.status(409).json({
     error: `${error.name}`,
-    message: `${error.message}`
+    message: message
   })
 }
 

@@ -8,21 +8,14 @@ module.exports = {
     const { content, postID } = req.body
     const userID = req.userID
 
-    const createdComment = await connection(TABLENAME)
+    await connection(TABLENAME)
       .insert({
         content,
         userIDFK: userID,
         postIDFK: postID
       })
-      .catch((error) => handleError(error, res))
-
-    if (!createdComment) {
-      return res.status(406).json({
-        error: 'impossivel criar comment, verifique a informação do usuario e post'
-      })
-    }
-
-    return res.status(200).json({ id: createdComment[0] })
+      .then(createdComment => res.status(201).json({ id: createdComment[0] }))
+      .catch((error) => handleError(error, res, 'impossivel criar comment, verifique a informação do usuario e post'))
   },
 
   async index (req, res) {
@@ -35,15 +28,8 @@ module.exports = {
         id,
         userIDFK: userID
       })
-      .catch((error) => handleError(error, res))
-
-    if (!comment) {
-      return res.status(406).json({
-        error: 'impossivel achar comment, verifique a informação do usuario e post'
-      })
-    }
-
-    return res.status(200).json({ data: comment })
+      .then(comment => res.status(200).json({ data: comment }))
+      .catch((error) => handleError(error, res, 'impossivel achar comment, verifique a informação do usuario e post'))
   }, 
 
   async update (req, res) {
@@ -59,15 +45,14 @@ module.exports = {
       .update({
         content
       })
-      .catch((error) => handleError(error, res))
+      .then(commentUpdated => {
+        if (commentUpdated === 0) {
+          return res.status(406).json({error: "comentario invalido, verificar essa informação"})
+        }
 
-    if (!commentUpdated) {
-      return res.status(406).json({
-        error: 'impossivel alterar comment, verifique a informação do usuario e post'
+        return res.status(200).json({ id: commentUpdated })
       })
-    }
-
-    return res.status(200).json({ id: commentUpdated })
+      .catch((error) => handleError(error, res, 'impossivel alterar comment, verifique a informação do usuario e post'))
   },
 
   async remove (req, res) {
@@ -80,14 +65,13 @@ module.exports = {
         userIDFK: userID
       })
       .del()
-      .catch((error) => handleError(error, res))
+      .then(removedComment => {
+        if (removedComment === 0) {
+          return res.status(406).json({error: "comentario invalido, verificar essa informação"})
+        }
 
-    if (!removedComment) {
-      return res.status(406).json({
-        error: 'não foi possivel remover esse comment, verificar informações'
+        return res.status(200).json({ id: removedComment })
       })
-    }
-
-    return res.status(200).json({ id: removedComment })
+      .catch((error) => handleError(error, res, 'não foi possivel remover esse comment, verificar informações'))
   }
 }
