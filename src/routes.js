@@ -58,11 +58,11 @@ routes.delete('/posts/:id', celebrate({
   })
 }), auth, PostController.delete)
 
-routes.get('/posts/comments', celebrate({
-  [Segments.BODY]: Joi.object().keys({
-    postID: Joi.number().required()
+routes.get('/posts/:id/comments', celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.string().required()
   })
-}), auth, PostController.indexCommentsByPost)
+}),auth, PostController.indexCommentsByPost)
 
 routes.post('/comments', celebrate({
   [Segments.BODY]: Joi.object().keys({

@@ -20,9 +20,9 @@ module.exports = {
 
   async index (req, res) {
     const userID = req.userID
-    const id = req.params
+    const { id } = req.params
 
-    const comment = await connection(TABLENAME)
+    await connection(TABLENAME)
       .select('*')
       .where({
         id,
@@ -34,10 +34,10 @@ module.exports = {
 
   async update (req, res) {
     const userID = req.userID
-    const id = req.params
+    const { id } = req.params
     let  { content } = req.body
 
-    const commentUpdated = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({ 
         id,
         userIDFK: userID
@@ -57,9 +57,9 @@ module.exports = {
 
   async remove (req, res) {
     const userID = req.userID
-    const id = req.params
+    const { id } = req.params
 
-    const removedComment = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({
         id,
         userIDFK: userID

@@ -29,7 +29,7 @@ module.exports = {
   },
 
   async indexUser (req, res) {
-    const id = req.params
+    const { id } = req.params
 
     await connection(TABLENAME)
       .where({ id })
@@ -39,11 +39,11 @@ module.exports = {
   },
 
   async indexCommentsByPost (req, res) {
-    const { postID } = req.body
+    const { id } = req.params
 
     await connection('comments')
       .where({
-        postIDFK: postID,
+        postIDFK: id,
       })
       .select('*')
       .then(comments => res.status(200).json({data: comments}))
@@ -51,7 +51,7 @@ module.exports = {
   },
 
   async delete (req, res) {
-    const id = req.params.id
+    const { id } = req.params
     const userID = req.userID
 
     await connection(TABLENAME)

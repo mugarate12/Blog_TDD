@@ -80,11 +80,8 @@ describe('tests for a comments CRUD', () => {
 
   it('should get comments by post', async () => {
     const comments = await request(app)
-      .get('/posts/comments')
+      .get(`/posts/${createdPostID}/comments`)
       .set('Authorization', `bearer ${token}`)
-      .send({
-        postID: createdPostID
-      })
 
     expect(comments.status).toBe(200)
   })

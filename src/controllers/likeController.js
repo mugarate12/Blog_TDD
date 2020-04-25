@@ -19,11 +19,11 @@ module.exports = {
 
   async index (req, res) {
     const userID = req.userID
-    const postID = req.params
+    const { id } = req.params
 
     const numberLikes = await connection(TABLENAME)
       .where({
-        postIDFK: postID,
+        postIDFK: id,
         userIDFK: userID
       })
       .then(numberLikes => res.status(200).json({
@@ -35,11 +35,11 @@ module.exports = {
 
   async remove (req, res) {
     const userID = req.userID
-    const postID = req.params
+    const { id } = req.params
 
     await connection(TABLENAME)
       .where({
-        postIDFK: postID,
+        postIDFK: id,
         userIDFK: userID
       })
       .then(unlike => res.status(200).json({liked: false}))
