@@ -65,7 +65,7 @@ module.exports = {
           return res.status(406).json({error: "post invalido, verificar essa informação"})
         }
 
-        return res.status(200).json({ id: removedPost })
+        return res.status(200).json({})
       })
       .catch(error => handleError(error, res, 'não foi possivel remover esse post, verificar informações do post ou usuario'))
   }

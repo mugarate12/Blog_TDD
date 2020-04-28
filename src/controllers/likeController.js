@@ -21,7 +21,7 @@ module.exports = {
     const userID = req.userID
     const { id } = req.params
 
-    const numberLikes = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({
         postIDFK: id,
         userIDFK: userID
@@ -42,6 +42,7 @@ module.exports = {
         postIDFK: id,
         userIDFK: userID
       })
+      .del()
       .then(unlike => res.status(200).json({liked: false}))
       .catch((error) => handleError(error, res, 'impossivel remover like, verifique a informação do usuario e post'))
   }

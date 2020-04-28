@@ -59,15 +59,20 @@ module.exports = {
         description
       })
       .then(userUpdated => res.status(200).json({ userUpdated }))
-      .catch((error) => handleError(error, res, "olá"))
-    
-    // if (!userUpdated) {
-    //   return res.status(406).json({
-    //     error: 'não foi possivel alterar a descrição deste usuario, por favor, verifique os dados informados'
-    //   })
-    // }
+      .catch((error) => handleError(error, res, "não foi possivel fazer essa atualização, por favor, verifique as informações do usuario"))
+  },
 
-    // return 
+  async updateName (req, res) {
+    const id = req.userID
+    const { name } = req.body
+
+    await connection(TABLENAME)
+      .where({ id })
+      .update({
+        name
+      })
+      .then(userUpdated => res.status(200).json({}))
+      .catch((error) => handleError(error, res, "não foi possivel fazer alterar o nome, por favor, verifique as informações do usuario"))
   },
 
   async remove (req, res) {
@@ -84,6 +89,6 @@ module.exports = {
       })
     }
 
-    return res.status(200).json(removedUser)
+    return res.status(200).json({})
   }
 }

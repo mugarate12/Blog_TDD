@@ -46,6 +46,14 @@ describe('Tests for a user credencials', () => {
         password: "123456"
       })
 
-    expect(InvalidUser.status).toBe(406)
+    expect(InvalidUser.status).toBe(409)
+  })
+
+  it('should get a user by username', async () => {
+    const user = await request(app)
+      .get('/profile/Test USER')
+      .set('Authorization', `bearer ${LoggedTokenUser.body.token}`)
+
+    expect(user.status).toBe(200)
   })
 })

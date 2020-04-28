@@ -80,6 +80,17 @@ describe('Tests for users routes', () => {
     expect(updatedUser.status).toBe(200)
   })
 
+  it('should a valid user b a update name', async () => {
+    const updatedUser = await request(app)
+      .put('/users/name')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: "I am a young Batman"
+      })
+
+    expect(updatedUser.status).toBe(200)
+  })
+
   it('should a valid user request remove yourself', async () => {
     const removedUser = await request(app)
       .delete('/users')

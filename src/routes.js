@@ -26,6 +26,11 @@ routes.put('/users', celebrate({
     newPassword: Joi.string().required()
   })
 }), auth, UserController.updatePassoword)
+routes.put('/users/name', celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required()
+  })
+}), auth, UserController.updateName)
 routes.delete('/users', auth, UserController.remove)
 
 routes.post('/profile', celebrate({
@@ -34,6 +39,11 @@ routes.post('/profile', celebrate({
     password: Joi.string().required()
   })
 }), ProfileController.login)
+routes.get('/profile/:username', celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    username: Joi.string().required()
+  })
+}), auth, ProfileController.findUser)
 routes.put('/profile', celebrate({
   [Segments.BODY]: Joi.object().keys({
     description: Joi.string().required()

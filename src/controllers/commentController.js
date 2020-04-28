@@ -50,7 +50,7 @@ module.exports = {
           return res.status(406).json({error: "comentario invalido, verificar essa informação"})
         }
 
-        return res.status(200).json({ id: commentUpdated })
+        return res.status(200).json({})
       })
       .catch((error) => handleError(error, res, 'impossivel alterar comment, verifique a informação do usuario e post'))
   },
@@ -70,7 +70,7 @@ module.exports = {
           return res.status(406).json({error: "comentario invalido, verificar essa informação"})
         }
 
-        return res.status(200).json({ id: removedComment })
+        return res.status(200).json({})
       })
       .catch((error) => handleError(error, res, 'não foi possivel remover esse comment, verificar informações'))
   }
