@@ -1,9 +1,9 @@
 const connection = require('./../database/connection')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const { handleError } = require('./../utils/utils')
-const { comparePassword } = require('./../utils/hashPassword')
-const JWT_SECRET = process.env.JWT_SECRET
+const createToken = require('./../utils/createToken')
 
 const TABLENAME = 'users'
 
@@ -11,29 +11,37 @@ module.exports = {
   async login (req, res) {
     const { username, password } = req.body
 
-    const user = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({
         username
       })
       .select('*')
       .first()
-      .catch(error => handleError(error))
-    
-    // verifico se a busca foi feita com sucesso
-    if (!user) {
-      return res.status(406).json({
-        error: 'usuario não encontrado, por favor, verificar informações'
+      .then(async user => {
+        const inValidPassword = await bcrypt.compare(password, user.password)
+        if (!inValidPassword) {
+          return res.status(406).json({
+            error: 'informações incorretas, por favor, vereficar se todas as credenciais foram enviadas corretamente'
+          })
+        }
+        delete user.password
+
+        const token = createToken(user)
+        return res.status(200).json({ token, user })
       })
-    }
+      .catch(error => handleError(error, res, "usuario não encontrado, por favor, verificar informações"))
+  },
 
-    // verifico se o password informado é compativel com o password criptografado no banco
-    await comparePassword(password, user.password)
+  async findUser (req, res) {
+    const { username } = req.params
 
-    // crio o token
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, {})
-
-    return res.status(200).json({token, user})
-
-    // const token = createToken({})
+    await connection(TABLENAME)
+      .select('id', 'username', 'name', 'description')
+      .where({
+        username
+      })
+      .first()
+      .then(user => res.status(200).json({ data: user}))
+      .catch(error => handleError(error, res, "impossivel realizar busca, por favor, verifique as informações"))
   }
 }

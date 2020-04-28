@@ -6,7 +6,7 @@ describe('Tests for a post CRUD', () => {
   let createPost
 
   beforeAll(async (done) => {
-    const userCreated = await request(app)
+    await request(app)
       .post('/users')
       .send({
         username: "post_test_user",
@@ -35,9 +35,29 @@ describe('Tests for a post CRUD', () => {
     done()
   })
 
-  it('should a create a post', async () => {
+  it('should create a post', async () => {
     expect(createPost.body.id).toBeGreaterThan(0)
-    expect(createPost.status).toBe(200)
+    expect(createPost.status).toBe(201)
+  })
+
+  it('should not create a post', async () => {
+    allFieldsRequired = await request(app)
+      .post('/posts')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        title: "Sou um título"
+      })
+
+    tokenRequired = await request(app)
+      .post('/posts')
+      .send({
+        title: "Sou um título",
+        content: "Sou um conteúdo, falo sobre a vida, filosofia, e fora aquele que cê sabe quem"
+      })
+    
+    // console.log(allFieldsRequired.body)
+    expect(allFieldsRequired.status).toBe(400)
+    expect(tokenRequired.status).toBe(401)
   })
 
   it('should get posts by user', async () => {
@@ -71,5 +91,13 @@ describe('Tests for a post CRUD', () => {
       .set('Authorization', `bearer ${token}`)
       
     expect(removedPost.status).toBe(200)
+  })
+
+  it('should get response error for a not valid post for remove', async () => {
+    const invalidPostRemove = await request(app)
+      .delete('/posts/2000')
+      .set('Authorization', `bearer ${token}`)
+
+    expect(invalidPostRemove.status).toBe(406)
   })
 })

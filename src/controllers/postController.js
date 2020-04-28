@@ -8,68 +8,65 @@ module.exports = {
     const id = req.userID
     const { title, content } = req.body
 
-    const createdPost = await connection(TABLENAME)
+    await connection(TABLENAME)
       .insert({
         title,
         content,
         userIDFK: id
       })
-      .catch((error) => handleError(error, res))
-
-    if (!createdPost) {
-      return res.status(406).json({
-        error: 'impossivel criar post, verifique a informação do usuario'
-      })
-    }
-
-    return res.status(200).json({id: createdPost[0]})
+      .then(createdPost => res.status(201).json({id: createdPost[0]}))
+      .catch((error) => handleError(error, res, "impossivel criar post, verifique a informação do usuario"))
   },
 
   async index (req, res) {
     const userID = req.userID
 
-    const posts = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({ userIDFK: userID})
       .select('*')
-    
-    if (!posts) {
-      return res.status(406).json({
-        error: 'não foi possivel encontrar posts deste usuario'
-      })
-    }
-
-    return res.status(200).json({ data: posts })
+      .then(posts => res.status(200).json({ data: posts }))
+      .catch(error => handleError(error, res, 'não foi possivel encontrar posts deste usuario'))
   },
 
   async indexUser (req, res) {
-    const id = req.params
+    const { id } = req.params
 
-    const posts = await connection(TABLENAME)
+    await connection(TABLENAME)
       .where({ id })
       .select('*')
+      .then(posts => res.status(200).json({ data: posts }))
+      .catch(error => handleError(error, res, 'não foi possivel encontrar posts deste usuario'))
+  },
 
-    if (!posts) {
-      return res.status(406).json({
-        error: 'não foi possivel encontrar posts deste usuario'
+  async indexCommentsByPost (req, res) {
+    const { id } = req.params
+
+    await connection('comments')
+      .where({
+        postIDFK: id,
       })
-    }
-
-    return res.status(200).json({ data: posts })
+      .select('*')
+      .then(comments => res.status(200).json({data: comments}))
+      .catch(error => handleError(error, res, 'erro ao buscar comentarios, verificar informação'))
   },
 
   async delete (req, res) {
-    const id = req.params.id
+    const { id } = req.params
+    const userID = req.userID
 
-    const removedPost = await connection(TABLENAME)
-      .where({ id })
-      .del()
-
-    if (!removedPost) {
-      return res.status(406).json({
-        error: 'não foi possivel remover esse post, verificar informações'
+    await connection(TABLENAME)
+      .where({ 
+        id,
+        userIDFK: userID
       })
-    }
+      .del()
+      .then(removedPost => {
+        if (removedPost === 0) {
+          return res.status(406).json({error: "post invalido, verificar essa informação"})
+        }
 
-    return res.status(200).json({ id: removedPost })
+        return res.status(200).json({})
+      })
+      .catch(error => handleError(error, res, 'não foi possivel remover esse post, verificar informações do post ou usuario'))
   }
 }

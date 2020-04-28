@@ -7,7 +7,7 @@ async function createPasswordHash(password) {
   return newPassword
 }
 
-async function comparePassword(password, hashPassword) {
+async function comparePassword(password, hashPassword, res) {
   const isValidPassword = await bcrypt.compare(password, hashPassword)
   if (!isValidPassword) {
     return res.status(406).json({
