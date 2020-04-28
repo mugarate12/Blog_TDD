@@ -23,10 +23,14 @@ module.exports = {
 
   async updatePassoword (req, res) {
     const id = req.userID
+    const username = req.username
     let { password, newPassword } = req.body
 
     await connection(TABLENAME)
-      .where({ id })
+      .where({
+        id,
+        username
+      })
       .select('*')
       .first()
       .then(async user => {
@@ -51,10 +55,14 @@ module.exports = {
 
   async updateDescription (req, res) {
     const id = req.userID
+    const username = req.username
     let { description } = req.body
 
     await connection(TABLENAME)
-      .where({ id })
+      .where({
+        id,
+        username
+      })
       .update({
         description
       })
@@ -64,10 +72,14 @@ module.exports = {
 
   async updateName (req, res) {
     const id = req.userID
+    const username = req.username
     const { name } = req.body
 
     await connection(TABLENAME)
-      .where({ id })
+      .where({
+        id,
+        username
+      })
       .update({
         name
       })
@@ -77,18 +89,15 @@ module.exports = {
 
   async remove (req, res) {
     const id = req.userID
+    const username = req.username
 
-    const removedUser = await connection(TABLENAME)
-      .where({ id })
-      .del()
-      .catch((error) => handleError(error, res))
-
-    if (!removedUser) {
-      return res.status(406).json({
-        error: 'não foi possivel remover esse usuario, verificar informações'
+    await connection(TABLENAME)
+      .where({
+        id,
+        username
       })
-    }
-
-    return res.status(200).json({})
+      .del()
+      .then(user => res.status(200).json({}))
+      .catch((error) => handleError(error, res, 'não foi possivel remover esse usuario, verificar informações'))
   }
 }

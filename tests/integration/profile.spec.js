@@ -34,7 +34,7 @@ describe('Tests for a user credencials', () => {
     const decodedToken = jwt.verify(LoggedTokenUser.body.token, JWT_SECRET, (error, decoded) => {
       return decoded
     })
-    
+
     expect(decodedToken.id).toBeGreaterThan(0)
   })
 

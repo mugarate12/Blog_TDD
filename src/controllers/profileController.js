@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const { handleError } = require('./../utils/utils')
-const { comparePassword } = require('./../utils/hashPassword')
-const JWT_SECRET = process.env.JWT_SECRET
+const createToken = require('./../utils/createToken')
 
 const TABLENAME = 'users'
 
@@ -25,10 +24,10 @@ module.exports = {
             error: 'informações incorretas, por favor, vereficar se todas as credenciais foram enviadas corretamente'
           })
         }
+        delete user.password
 
-        // crio o token
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, {})
-        return res.status(200).json({token, user})
+        const token = createToken(user)
+        return res.status(200).json({ token, user })
       })
       .catch(error => handleError(error, res, "usuario não encontrado, por favor, verificar informações"))
   },
